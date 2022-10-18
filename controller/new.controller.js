@@ -54,7 +54,7 @@ const retreiveNewsHTNDTV = async () => {
                         object.link = object.link ? object.link : $(childerenData).find('a').attr('href');
                         object.shortStory = object.shortStory ? object.shortStory : $(childerenData).find('.newsCont').text().toString();
                         object.date = object.date ? object.date : $(childerenData).find('.posted-by').text();
-                        object.imageReal =object.imageReal  ? object.imageReal : $(childerenData).find('img').attr('alt');
+                        object.imageReal =object.image  ? object.image : $(childerenData).find('img').attr('src');
                         object.image = object.image  ? object.image : $(childerenData).find('img').attr('src');
                         object.dataSource = 'NDTV';
                     }	
