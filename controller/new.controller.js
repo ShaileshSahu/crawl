@@ -97,7 +97,8 @@ const retreiveNewsHT = async () => {
 }
 
 export const fetchNewsController = async (request,reply) => {
-    const data = cache.has('news') ? JSON.parse(cache.get('news')): await fetchNews(); 
+    let data = cache.has('news') ? JSON.parse(cache.get('news')): await fetchNews(); 
+    data = data.filter(ele=> ele.title);
     const length = data.length;
     for(let index in data) {
         const random = Math.floor(Math.random() * (length - 0) + 0);
@@ -105,6 +106,7 @@ export const fetchNewsController = async (request,reply) => {
         data[index] = data[random];
         data[random] = temp;
     }
+    
     return {data};
 };
 
