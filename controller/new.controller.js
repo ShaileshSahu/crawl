@@ -11,7 +11,7 @@ const fetchApi = (url) => {
 const fetchNews = async () => {
    
     const news = await retreiveNews();
-    // cache.set('news', JSON.stringify(news),TTL);
+    cache.set('news', JSON.stringify(news),TTL);
     return news;
 };
 const retreiveNews = async () => {
@@ -98,6 +98,13 @@ const retreiveNewsHT = async () => {
 
 export const fetchNewsController = async (request,reply) => {
     const data = cache.has('news') ? JSON.parse(cache.get('news')): await fetchNews(); 
+    const length = data.length;
+    for(let index in data) {
+        const random = Math.floor(Math.random() * (length - 0) + 0);
+        let temp = data[index];
+        data[index] = data[random];
+        data[random] = temp;
+    }
     return {data};
 };
 
