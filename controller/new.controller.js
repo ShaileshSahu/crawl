@@ -89,11 +89,11 @@ const retreiveNewsEconomics = async () => {
                 $(articleData).children((index,childerenData) => {
                         object.title =  object.title ? object.title : $(childerenData).find('a').text().toString();
                         object.type = $(childerenData).find('.catName').text() ? $(childerenData).find('.catName').text() : 'Market';
-                        object.link = object.link ? object.link : $(childerenData).find('a').attr('href');
-                        object.shortStory = object.shortStory ? object.shortStory : (childerenData && childerenData.firstChild && childerenData.firstChild.data ? childerenData.firstChild.data:'' );                        ;
-                        object.date = object.date ? object.date : $(childerenData).find('date').attr('date-time');
-                        object.imageReal =object.image  ? object.image : $(childerenData).find('img').attr('src');
-                        object.image = object.image  ? object.image : $(childerenData).find('img').attr('src');
+                        object.link = object.link ? object.link : 'https://economictimes.indiatimes.com' + $(childerenData).find('a').attr('href');
+                        object.shortStory = object.shortStory ? object.shortStory : $(childerenData).find('p').text();                        ;
+                        object.date = object.date ? object.date : (childerenData && childerenData.firstChild && childerenData.firstChild.data ? childerenData.firstChild.data:'' );
+                        object.imageReal =object.image  ? object.image : $(childerenData).find('img').attr('data-original');
+                        object.image = object.image  ? object.image : $(childerenData).find('img').attr('data-original');
                         object.dataSource = 'Economictimes';
                     }	
                 );
