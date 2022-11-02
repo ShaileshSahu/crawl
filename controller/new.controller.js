@@ -3,7 +3,7 @@ import cheerio from 'cheerio';
 import  got from 'got';
 import NodeCache from 'node-cache';
 const cache = new NodeCache(); 
-const TTL = 1000;
+const TTL = 20000;
 const fetchApi = (url) => {
     return got.get(url);
 };
@@ -19,7 +19,7 @@ const retreiveNews = async () => {
         const news = [];
         news.push(... await retreiveNewsHT());
         news.push(... await retreiveNewsHTNDTV());
-
+        news.push(...await retreiveNewsEconomics());
         return news;
     } catch (error) {
         return Promise.reject();
@@ -66,6 +66,43 @@ const retreiveNewsHTNDTV = async () => {
 	return news;	
 }
 
+const retreiveNewsEconomics = async () => {
+    const news = []
+    let url = "https://economictimes.indiatimes.com/markets/stocks/news";
+        let newurl = url;
+        const data =  await Promise.resolve(fetchApi(newurl))
+        const $ = cheerio.load(data.body);
+	    let index = 0;
+        const selector = "#pageContent > div.tabdata > div"		
+        $(selector).each( (articleIndex,articleData) => {
+                let object = {
+                    title: '',
+                    type: '',
+                    link: '',
+                    shortStory:'',
+                    date: '',
+                    imageReal:'',
+                    image: '',
+                    dataSource: '',
+                    id: ++index
+                };
+                $(articleData).children((index,childerenData) => {
+                        object.title =  object.title ? object.title : $(childerenData).find('a').text().toString();
+                        object.type = $(childerenData).find('.catName').text() ? $(childerenData).find('.catName').text() : 'Market';
+                        object.link = object.link ? object.link : $(childerenData).find('a').attr('href');
+                        object.shortStory = object.shortStory ? object.shortStory : (childerenData && childerenData.firstChild && childerenData.firstChild.data ? childerenData.firstChild.data:'' );                        ;
+                        object.date = object.date ? object.date : $(childerenData).find('date').attr('date-time');
+                        object.imageReal =object.image  ? object.image : $(childerenData).find('img').attr('src');
+                        object.image = object.image  ? object.image : $(childerenData).find('img').attr('src');
+                        object.dataSource = 'Economictimes';
+                    }	
+                );
+                news.push(object);
+            }
+        );
+ 
+	return news;	
+}
 const retreiveNewsHT = async () => {
     const details = await Promise.resolve(fetchApi('https://www.hindustantimes.com'));
     const $ = cheerio.load(details.body);
